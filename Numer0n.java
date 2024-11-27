@@ -1,23 +1,29 @@
-import java.util.InputMismatchException;
+package Numer0n.numeron_okuya;
+
 import java.util.Scanner;
+import java.util.InputMismatchException;
 
 public class Numer0n {
 
 	public static void main(String args[]) {
 
 		// 変数設定
+
+		// 生成した解答用配列
 		int answer[] = new int[4];
+		// 入力した数値を格納する配列
 		int input[] = new int[4];
-		int count = 0;
-		int bc = 0;
-		int ec = 0;
-		int cc = 1;
 
 		// 4桁乱数生成
 		for (int i = 0; i <= 3; i++) {
+
+			// 重複カウント用
+			int count = 0;
+			// 乱数一時格納用
 			int ans = (int) (Math.random() * 10);
+
 			for (int chk = 0; chk <= 3; chk++) {
-				if (answer[(chk)] == ans) {
+				if (answer[chk] == ans) {
 					count++;
 				}
 			}
@@ -31,45 +37,64 @@ public class Numer0n {
 				answer[i] = ans;
 			}
 
-			// デバッグ用解答表示
-			System.out.println(answer[i]);
 		}
 
+		System.out.println("4桁の数字を入力してください");
+
 		// 挑戦回数分ループ部
-		for (int tc = 0; tc <= 9; tc++) {
+		for (int time = 1; time <= 10; time++) {
+
+			// キーボードから入力した4桁格納用
+			int org = 0;
+			System.out.print((time) + "回目：");
 
 			// キーボードから入力受付
 			try {
 				Scanner scanner = new Scanner(System.in);
-				System.out.println("1桁目を入力してください。");
-				input[0] = scanner.nextInt();
-				System.out.println("2桁目を入力してください。");
-				input[1] = scanner.nextInt();
-				System.out.println("3桁目を入力してください。");
-				input[2] = scanner.nextInt();
-				System.out.println("4桁目を入力してください。");
-				input[3] = scanner.nextInt();
-				System.out.println("入力した数値は " + input[0] + input[1] + input[2] + input[3] + " です。");
+				org = scanner.nextInt();
+
+				// 4桁以外の場合は例外処理
+				if (String.valueOf(org).length() != 4) {
+					throw new InputMismatchException();
+				}
 			} catch (InputMismatchException e) {
-				System.out.println("数値以外が入力されました。終了します");
-				break;
+				System.out.print("4桁の数字を入力してください。\n");
+				time--;
+				continue;
 			}
 
-			// ループ初期にEat,Biteをリセット
-			ec = 0;
-			bc = 0;
+			// キーボードからの入力を配列に代入
+			int orin = 0;
+			for (int orgc = 3; orgc >= 0; orgc--) {
+
+				orin = org % 10;
+				input[orgc] = orin;
+				org = org / 10;
+			}
+
+			// Eatカウント用
+			int ec = 0;
+
+			// Biteカウント用
+			int bc = 0;
 
 			// Eat判定部
 			for (int j = 0; j <= 3; j++) {
 				if (answer[j] == input[j]) {
+
+					// Eatカウントをインクリメント
 					ec++;
+
 				} else {
+
 					// Bite判定部
 					for (int k = 0; k <= 3; k++) {
-						if (j == k) {
-							;
-						} else if (answer[j] == input[k]) {
-							bc++;
+						if (j != k) {
+							if (answer[j] == input[k]) {
+
+								// Biteカウントをインクリメント
+								bc++;
+							}
 						}
 					}
 				}
@@ -84,11 +109,10 @@ public class Numer0n {
 				break;
 
 				// 挑戦回数が10回に到達で終了
-			} else if (tc == 9) {
+			} else if (time == 10) {
 				System.out.println("\n10回以内に正解しませんでした。あなたの負けです");
 			} else {
-				System.out.println("\n次は" + (cc + 1) + "回目です\n");
-				cc++;
+				System.out.println("4桁の数字を入力してください。");
 			}
 		}
 	}
